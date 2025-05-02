@@ -1,0 +1,188 @@
+
+// CSS Variable types
+export type CSSVariable = {
+  name: string;
+  label: string;
+  value: string;
+  type: 'color' | 'size' | 'text' | 'time' | 'number';
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+};
+
+export type CSSTheme = {
+  name: string;
+  label: string;
+  className: string;
+  description: string;
+};
+
+// Default CSS variables 
+export const defaultCssVariables: CSSVariable[] = [
+  { name: '--css-primary-color', label: 'Primary Color', value: '#3b82f6', type: 'color' },
+  { name: '--css-secondary-color', label: 'Secondary Color', value: '#f472b6', type: 'color' },
+  { name: '--css-accent-color', label: 'Accent Color', value: '#10b981', type: 'color' },
+  { name: '--css-background-color', label: 'Background Color', value: '#ffffff', type: 'color' },
+  { name: '--css-text-color', label: 'Text Color', value: '#1f2937', type: 'color' },
+  { name: '--css-border-radius', label: 'Border Radius', value: '0.5', type: 'number', min: 0, max: 2, step: 0.1, unit: 'rem' },
+  { name: '--css-spacing', label: 'Spacing', value: '1', type: 'number', min: 0, max: 3, step: 0.25, unit: 'rem' },
+  { name: '--css-font-size', label: 'Font Size', value: '1', type: 'number', min: 0.5, max: 2, step: 0.1, unit: 'rem' },
+  { name: '--css-animation-duration', label: 'Animation Duration', value: '0.3', type: 'number', min: 0, max: 2, step: 0.1, unit: 's' },
+];
+
+// Available themes
+export const cssThemes: CSSTheme[] = [
+  { 
+    name: 'default', 
+    label: 'Default', 
+    className: '', 
+    description: 'Clean and minimal design with modern aesthetics'
+  },
+  { 
+    name: 'glassmorphism', 
+    label: 'Glassmorphism', 
+    className: 'theme-glassmorphism',
+    description: 'Transparent, blurred glass effect with elegant borders'
+  },
+  { 
+    name: 'neumorphism', 
+    label: 'Neumorphism', 
+    className: 'theme-neumorphism',
+    description: 'Soft UI with subtle shadows and highlights'
+  },
+  { 
+    name: 'brutalist', 
+    label: 'Brutalist', 
+    className: 'theme-brutalist',
+    description: 'Bold, raw design with sharp edges and high contrast'
+  }
+];
+
+// Update CSS variable in document
+export const updateCSSVariable = (name: string, value: string): void => {
+  document.documentElement.style.setProperty(name, value);
+};
+
+// Get computed CSS variable value
+export const getCSSVariableValue = (name: string): string => {
+  return getComputedStyle(document.documentElement).getPropertyValue(name);
+};
+
+// Reset CSS variables to theme defaults
+export const resetCSSVariables = (): void => {
+  defaultCssVariables.forEach(variable => {
+    const computedValue = getCSSVariableValue(variable.name);
+    updateCSSVariable(variable.name, computedValue);
+  });
+};
+
+// Generate exportable CSS
+export const generateCSS = (variables: CSSVariable[]): string => {
+  let css = `:root {\n`;
+  
+  variables.forEach(variable => {
+    const value = variable.type === 'number' ? `${variable.value}${variable.unit || ''}` : variable.value;
+    css += `  ${variable.name}: ${value};\n`;
+  });
+  
+  css += `}\n\n`;
+  
+  // Add utility classes
+  css += `.preview-button {
+  background-color: var(--css-primary-color);
+  color: white;
+  padding: calc(var(--css-spacing) * 0.5) var(--css-spacing);
+  border-radius: var(--css-border-radius);
+  font-size: var(--css-font-size);
+  box-shadow: var(--css-shadow);
+}
+
+.preview-card {
+  background-color: var(--css-background-color);
+  color: var(--css-text-color);
+  padding: var(--css-spacing);
+  border-radius: var(--css-border-radius);
+  box-shadow: var(--css-shadow);
+}
+
+.preview-input {
+  background-color: var(--css-background-color);
+  color: var(--css-text-color);
+  padding: calc(var(--css-spacing) * 0.5);
+  border-radius: var(--css-border-radius);
+  font-size: var(--css-font-size);
+  border: 1px solid var(--css-primary-color);
+}`;
+
+  return css;
+};
+
+// Generate exportable HTML
+export const generateHTML = (): string => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Playground Export</title>
+  <style>
+    /* Include your CSS here */
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <button class="preview-button">Button</button>
+    
+    <div class="preview-card">
+      <h2>Card Title</h2>
+      <p>This is some sample text in a card component.</p>
+    </div>
+    
+    <input class="preview-input" type="text" placeholder="Input field">
+    
+    <!-- Add more components as needed -->
+  </div>
+</body>
+</html>`;
+};
+
+// Copy text to clipboard
+export const copyToClipboard = async (text: string): Promise<boolean> => {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+    return false;
+  }
+};
+
+// Download text as file
+export const downloadFile = (content: string, filename: string, contentType: string): void => {
+  const a = document.createElement('a');
+  const file = new Blob([content], { type: contentType });
+  
+  a.href = URL.createObjectURL(file);
+  a.download = filename;
+  a.click();
+  
+  URL.revokeObjectURL(a.href);
+};
+
+// Export functions
+export const exportCSS = (variables: CSSVariable[]): void => {
+  const css = generateCSS(variables);
+  downloadFile(css, 'styles.css', 'text/css');
+};
+
+export const exportHTML = (): void => {
+  const html = generateHTML();
+  downloadFile(html, 'index.html', 'text/html');
+};
+
+export const exportFullProject = (variables: CSSVariable[]): void => {
+  const css = generateCSS(variables);
+  const html = generateHTML().replace('/* Include your CSS here */', css);
+  downloadFile(html, 'playground-export.html', 'text/html');
+};

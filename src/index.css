@@ -1,9 +1,11 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Base theme */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -34,21 +36,21 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Playground specific */
+    --playground-background: 210 40% 98%;
+    --playground-foreground: 222.2 84% 4.9%;
+    
+    /* CSS Playground Variables - Default Theme */
+    --css-primary-color: #3b82f6;
+    --css-secondary-color: #f472b6;
+    --css-accent-color: #10b981;
+    --css-background-color: #ffffff;
+    --css-text-color: #1f2937;
+    --css-border-radius: 0.5rem;
+    --css-spacing: 1rem;
+    --css-font-size: 1rem;
+    --css-animation-duration: 0.3s;
+    --css-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
 
   .dark {
@@ -79,14 +81,22 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Playground specific */
+    --playground-background: 222.2 84% 4.9%;
+    --playground-foreground: 210 40% 98%;
+    
+    /* CSS Playground Variables - Dark Theme */
+    --css-primary-color: #60a5fa;
+    --css-secondary-color: #f9a8d4;
+    --css-accent-color: #34d399;
+    --css-background-color: #1f2937;
+    --css-text-color: #f3f4f6;
+    --css-border-radius: 0.5rem;
+    --css-spacing: 1rem;
+    --css-font-size: 1rem;
+    --css-animation-duration: 0.3s;
+    --css-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
   }
 }
 
@@ -97,5 +107,176 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Theme Classes */
+.theme-glassmorphism {
+  --css-primary-color: rgba(79, 70, 229, 0.9);
+  --css-secondary-color: rgba(219, 39, 119, 0.8);
+  --css-accent-color: rgba(16, 185, 129, 0.8);
+  --css-background-color: rgba(255, 255, 255, 0.1);
+  --css-text-color: rgba(31, 41, 55, 0.9);
+  --css-border-radius: 1rem;
+  --css-spacing: 1.25rem;
+  --css-font-size: 1rem;
+  --css-animation-duration: 0.5s;
+  --css-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --css-backdrop-filter: blur(10px);
+  --css-border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .theme-glassmorphism {
+  --css-primary-color: rgba(129, 140, 248, 0.8);
+  --css-secondary-color: rgba(244, 114, 182, 0.8);
+  --css-accent-color: rgba(52, 211, 153, 0.8);
+  --css-background-color: rgba(30, 41, 59, 0.2);
+  --css-text-color: rgba(243, 244, 246, 0.9);
+}
+
+.theme-neumorphism {
+  --css-primary-color: #4f46e5;
+  --css-secondary-color: #db2777;
+  --css-accent-color: #10b981;
+  --css-background-color: #e0e5ec;
+  --css-text-color: #1f2937;
+  --css-border-radius: 1rem;
+  --css-spacing: 1.5rem;
+  --css-font-size: 1rem;
+  --css-animation-duration: 0.3s;
+  --css-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
+}
+
+.dark .theme-neumorphism {
+  --css-primary-color: #6366f1;
+  --css-secondary-color: #ec4899;
+  --css-accent-color: #34d399;
+  --css-background-color: #2d333b;
+  --css-text-color: #f3f4f6;
+  --css-shadow: 8px 8px 15px #1a1e22, -8px -8px 15px #404954;
+}
+
+.theme-brutalist {
+  --css-primary-color: #000000;
+  --css-secondary-color: #ff0000;
+  --css-accent-color: #0000ff;
+  --css-background-color: #ffffff;
+  --css-text-color: #000000;
+  --css-border-radius: 0;
+  --css-spacing: 2rem;
+  --css-font-size: 1.25rem;
+  --css-animation-duration: 0s;
+  --css-shadow: 5px 5px 0px #000000;
+  --css-border: 3px solid #000000;
+}
+
+.dark .theme-brutalist {
+  --css-primary-color: #ffffff;
+  --css-secondary-color: #ff0000;
+  --css-accent-color: #00ffff;
+  --css-background-color: #000000;
+  --css-text-color: #ffffff;
+  --css-border: 3px solid #ffffff;
+  --css-shadow: 5px 5px 0px #ffffff;
+}
+
+/* Utility Classes for Preview Panel */
+.preview-element {
+  transition: all var(--css-animation-duration);
+}
+
+.preview-button {
+  background-color: var(--css-primary-color);
+  color: white;
+  padding: calc(var(--css-spacing) * 0.5) var(--css-spacing);
+  border-radius: var(--css-border-radius);
+  font-size: var(--css-font-size);
+  box-shadow: var(--css-shadow);
+  border: var(--css-border, none);
+}
+
+.preview-card {
+  background-color: var(--css-background-color);
+  color: var(--css-text-color);
+  padding: var(--css-spacing);
+  border-radius: var(--css-border-radius);
+  box-shadow: var(--css-shadow);
+  border: var(--css-border, 1px solid var(--css-primary-color));
+  backdrop-filter: var(--css-backdrop-filter, none);
+}
+
+.preview-input {
+  background-color: var(--css-background-color);
+  color: var(--css-text-color);
+  padding: calc(var(--css-spacing) * 0.5);
+  border-radius: var(--css-border-radius);
+  font-size: var(--css-font-size);
+  border: var(--css-border, 1px solid var(--css-primary-color));
+}
+
+.preview-modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: var(--css-backdrop-filter, none);
+}
+
+.preview-modal {
+  background-color: var(--css-background-color);
+  color: var(--css-text-color);
+  padding: var(--css-spacing);
+  border-radius: var(--css-border-radius);
+  box-shadow: var(--css-shadow);
+  border: var(--css-border, none);
+  backdrop-filter: var(--css-backdrop-filter, none);
+}
+
+.animation-pulse {
+  animation: pulse var(--css-animation-duration) infinite alternate;
+}
+
+.animation-bounce {
+  animation: bounce var(--css-animation-duration) infinite alternate;
+}
+
+.animation-spin {
+  animation: spin var(--css-animation-duration) linear infinite;
+}
+
+.animation-fade {
+  animation: fade-in var(--css-animation-duration);
+}
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
