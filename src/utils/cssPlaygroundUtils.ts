@@ -1,4 +1,3 @@
-
 // CSS Variable types
 export type CSSVariable = {
   name: string;
@@ -20,8 +19,8 @@ export type CSSTheme = {
 
 // Default CSS variables 
 export const defaultCssVariables: CSSVariable[] = [
-  { name: '--css-primary-color', label: 'Primary Color', value: '#3b82f6', type: 'color' },
-  { name: '--css-secondary-color', label: 'Secondary Color', value: '#f472b6', type: 'color' },
+  { name: '--css-primary-color', label: 'Primary Color', value: '#4f46e5', type: 'color' },
+  { name: '--css-secondary-color', label: 'Secondary Color', value: '#ec4899', type: 'color' },
   { name: '--css-accent-color', label: 'Accent Color', value: '#10b981', type: 'color' },
   { name: '--css-background-color', label: 'Background Color', value: '#ffffff', type: 'color' },
   { name: '--css-text-color', label: 'Text Color', value: '#1f2937', type: 'color' },
@@ -56,6 +55,12 @@ export const cssThemes: CSSTheme[] = [
     label: 'Brutalist', 
     className: 'theme-brutalist',
     description: 'Bold, raw design with sharp edges and high contrast'
+  },
+  { 
+    name: 'modern', 
+    label: 'Modern', 
+    className: 'theme-modern',
+    description: 'Contemporary design with smooth gradients and refined interactions'
   }
 ];
 
@@ -77,7 +82,7 @@ export const resetCSSVariables = (): void => {
   });
 };
 
-// Generate exportable CSS
+// Generate exportable CSS with enhanced features
 export const generateCSS = (variables: CSSVariable[]): string => {
   let css = `:root {\n`;
   
@@ -86,9 +91,10 @@ export const generateCSS = (variables: CSSVariable[]): string => {
     css += `  ${variable.name}: ${value};\n`;
   });
   
+  css += `  --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n`;
   css += `}\n\n`;
   
-  // Add utility classes
+  // Add utility classes with enhanced styles
   css += `.preview-button {
   background-color: var(--css-primary-color);
   color: white;
@@ -96,6 +102,18 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   border-radius: var(--css-border-radius);
   font-size: var(--css-font-size);
   box-shadow: var(--css-shadow);
+  border: var(--css-border, none);
+  transition: var(--css-transition);
+  cursor: pointer;
+}
+
+.preview-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.preview-button:active {
+  transform: translateY(0);
 }
 
 .preview-card {
@@ -104,6 +122,13 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   padding: var(--css-spacing);
   border-radius: var(--css-border-radius);
   box-shadow: var(--css-shadow);
+  border: var(--css-border, 1px solid var(--css-primary-color));
+  transition: var(--css-transition);
+}
+
+.preview-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .preview-input {
@@ -112,7 +137,42 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   padding: calc(var(--css-spacing) * 0.5);
   border-radius: var(--css-border-radius);
   font-size: var(--css-font-size);
-  border: 1px solid var(--css-primary-color);
+  border: var(--css-border, 1px solid var(--css-primary-color));
+  transition: var(--css-transition);
+}
+
+.preview-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--css-primary-color);
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.7;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-12px);
+  }
+}
+
+.animation-pulse {
+  animation: pulse var(--css-animation-duration) infinite alternate ease-in-out;
+}
+
+.animation-bounce {
+  animation: bounce var(--css-animation-duration) infinite alternate ease-in-out;
 }`;
 
   return css;
