@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
 import CSSControlPanel from "@/components/CSSControlPanel";
 import PreviewPanel from "@/components/PreviewPanel";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { cssThemes, CSSTheme } from "@/utils/cssPlaygroundUtils";
 import { 
   Download, 
@@ -18,7 +19,8 @@ import {
   Layout,
   Eye,
   ArrowRight,
-  Info
+  Info,
+  LayoutPanelTop
 } from "lucide-react";
 
 const CSSPlayground: React.FC = () => {
@@ -122,7 +124,7 @@ const CSSPlayground: React.FC = () => {
         </div>
       </header>
       
-      <main className="container py-8 animate-fade-in">
+      <main className="container py-8 animate-fade-in flex flex-col h-[calc(100vh-160px)]">
         {showWelcomeGuide && (
           <div className="mb-6 bg-primary/5 border border-primary/20 rounded-xl p-4 relative animation-reveal">
             <button 
@@ -160,69 +162,86 @@ const CSSPlayground: React.FC = () => {
         )}
 
         <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-medium text-foreground/90">Design Workspace</h2>
-              <p className="text-muted-foreground text-sm">Customize your CSS variables and see real-time changes</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-full flex items-center gap-2"
-                data-tooltip="View and copy the generated code"
-              >
-                <Code size={16} />
-                Export Code
-              </Button>
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="rounded-full flex items-center gap-2"
-                data-tooltip="Preview your design in fullscreen"
-              >
-                <Eye size={16} />
-                Preview
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <LayoutPanelTop size={18} className="text-primary" />
+            <h2 className="text-xl font-medium text-foreground/90">Horizontal Layout Preview</h2>
+            <span className="text-xs text-muted-foreground ml-2">(Preview panel on top, controls on bottom)</span>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2">
-            <div className="sticky top-24">
-              <CSSControlPanel 
-                onThemeChange={handleThemeChange}
-                currentTheme={currentTheme}
-                isDarkMode={isDarkMode}
-                onToggleDarkMode={toggleDarkMode}
-              />
-            </div>
-          </div>
-          <div className="lg:col-span-3 animate-scale-in">
-            <div className="bg-card border rounded-xl shadow-lg h-[70vh] overflow-hidden transition-all hover:shadow-xl">
-              <div className="bg-muted/50 border-b p-2 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-amber-500"></div>
-                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="text-xs text-muted-foreground">preview.html</div>
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 w-7 p-0 rounded-full"
-                    data-tooltip="Change layout view"
-                  >
-                    <Layout size={14} />
-                  </Button>
-                </div>
+        <ResizablePanelGroup 
+          direction="vertical" 
+          className="flex-1 border rounded-xl bg-card shadow-lg overflow-hidden h-full"
+        >
+          {/* Top Section: Preview Panel */}
+          <ResizablePanel defaultSize={60} minSize={30} className="bg-muted/30">
+            <div className="bg-muted/50 border-b p-2 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                <div className="h-3 w-3 rounded-full bg-amber-500"></div>
+                <div className="h-3 w-3 rounded-full bg-green-500"></div>
               </div>
+              <div className="text-xs text-muted-foreground">preview.html</div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 w-7 p-0 rounded-full"
+                  data-tooltip="Change layout view"
+                >
+                  <Layout size={14} />
+                </Button>
+              </div>
+            </div>
+            <div className="h-full overflow-y-auto p-4">
               <PreviewPanel currentTheme={currentTheme} isDarkMode={isDarkMode} />
             </div>
-          </div>
-        </div>
+          </ResizablePanel>
+          
+          {/* Resizable Handle */}
+          <ResizableHandle withHandle />
+          
+          {/* Bottom Section: CSS Control Panel */}
+          <ResizablePanel defaultSize={40} minSize={25}>
+            <div className="flex h-full">
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-lg font-medium flex items-center gap-2">
+                    <Palette size={18} className="text-primary" />
+                    CSS Control Panel
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full flex items-center gap-2"
+                      data-tooltip="View and copy the generated code"
+                    >
+                      <Code size={16} />
+                      Export Code
+                    </Button>
+                    <Button 
+                      variant="default" 
+                      size="sm" 
+                      className="rounded-full flex items-center gap-2"
+                      data-tooltip="Preview your design in fullscreen"
+                    >
+                      <Eye size={16} />
+                      Preview
+                    </Button>
+                  </div>
+                </div>
+                
+                <CSSControlPanel 
+                  onThemeChange={handleThemeChange}
+                  currentTheme={currentTheme}
+                  isDarkMode={isDarkMode}
+                  onToggleDarkMode={toggleDarkMode}
+                />
+              </div>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
         
         <div className="mt-8 p-6 bg-card border rounded-xl shadow-md transition-all hover:shadow-lg animate-fade-in">
           <h2 className="text-lg font-medium mb-3 flex items-center gap-2">

@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -130,6 +129,14 @@ export default {
 				'height-transition': {
 					from: { height: '0' },
 					to: { height: 'var(--element-height)' }
+				},
+				'height-expand': {
+					from: { height: '0' },
+					to: { height: 'var(--panel-height)' }
+				},
+				'horizontal-slide': {
+					from: { transform: 'translateX(-20px)', opacity: '0' },
+					to: { transform: 'translateX(0)', opacity: '1' }
 				}
 			},
 			animation: {
@@ -145,7 +152,9 @@ export default {
 				'shimmer': 'shimmer 2s linear infinite',
 				'reveal-right': 'reveal-right 0.5s ease-out forwards',
 				'tooltip-appear': 'tooltip-appear 0.2s ease-out forwards',
-				'height-transition': 'height-transition 0.3s ease-out'
+				'height-transition': 'height-transition 0.3s ease-out',
+				'height-expand': 'height-expand 0.3s ease-out',
+				'horizontal-slide': 'horizontal-slide 0.5s ease-out forwards',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -154,6 +163,10 @@ export default {
 			},
 			minHeight: {
 				'600': '600px',
+			},
+			height: {
+				'panel': 'var(--panel-height)',
+				'content': 'calc(100% - 50px)'
 			}
 		}
 	},
@@ -238,6 +251,17 @@ export default {
 				'.preview-content': {
 					'flex': '1',
 					'overflow': 'auto',
+					'padding': '1rem',
+				},
+				'.tab-content-container': {
+					'overflow-y': 'auto',
+					'height': 'calc(100% - 50px)',
+					'padding-bottom': '1rem',
+				},
+				'.horizontal-layout-panel': {
+					'display': 'flex',
+					'flex-direction': 'column',
+					'height': '100%',
 				}
 			})
 		}
