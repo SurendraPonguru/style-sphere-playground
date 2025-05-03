@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
@@ -25,10 +24,10 @@ import {
   FileText, 
   Code, 
   Palette, 
-  Gradient, 
+  PaintBucket, 
   Plus, 
   Trash,
-  PaintBucket
+  PaintBucket as GradientIcon
 } from "lucide-react";
 
 interface CSSControlPanelProps {
@@ -155,7 +154,7 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
             <PaintBucket size={14} /> Themes
           </TabsTrigger>
           <TabsTrigger value="gradients" className="flex items-center gap-1">
-            <Gradient size={14} /> Gradients
+            <GradientIcon size={14} /> Gradients
           </TabsTrigger>
         </TabsList>
         
@@ -353,7 +352,7 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
               }}></div>
               
               <Button onClick={handleApplyGradient} className="w-full mt-2 flex items-center gap-2">
-                <Gradient size={16} /> Apply Gradient to Elements
+                <GradientIcon size={16} /> Apply Gradient to Elements
               </Button>
             </div>
           </div>

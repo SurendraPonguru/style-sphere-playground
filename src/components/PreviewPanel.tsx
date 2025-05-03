@@ -10,7 +10,7 @@ import {
   Plus, 
   Check, 
   X, 
-  Gradient,
+  PaintBucket as GradientIcon,
   ArrowLeft, 
   ArrowUp, 
   ArrowDown 
@@ -203,7 +203,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                     background: "linear-gradient(90deg, var(--css-primary-color), var(--css-secondary-color))"
                   }}
                 >
-                  <Gradient size={16} /> Gradient
+                  <GradientIcon size={16} /> Gradient
                 </button>
                 <button 
                   className="preview-button interactive flex items-center gap-2 bg-gradient"
