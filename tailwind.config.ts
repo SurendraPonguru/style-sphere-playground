@@ -73,6 +73,11 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			boxShadow: {
+				'glass': '0 8px 32px rgba(0, 0, 0, 0.1)',
+				'neu': '8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff',
+				'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.4)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: { height: '0' },
@@ -113,6 +118,10 @@ export default {
 				'shimmer': {
 					from: { backgroundPosition: '-200% 0' },
 					to: { backgroundPosition: '200% 0' }
+				},
+				'reveal-right': {
+					from: { transform: 'translateX(-20px)', opacity: '0' },
+					to: { transform: 'translateX(0)', opacity: '1' }
 				}
 			},
 			animation: {
@@ -125,10 +134,13 @@ export default {
 				'slide-in': 'slide-in 0.5s ease-out',
 				'scale-in': 'scale-in 0.3s ease-out',
 				'float': 'float 3s ease-in-out infinite',
-				'shimmer': 'shimmer 2s linear infinite'
+				'shimmer': 'shimmer 2s linear infinite',
+				'reveal-right': 'reveal-right 0.5s ease-out forwards'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'dot-pattern': 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+				'noise': 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.1\'/%3E%3C/svg%3E")',
 			}
 		}
 	},
