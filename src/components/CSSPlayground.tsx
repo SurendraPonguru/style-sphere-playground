@@ -16,12 +16,15 @@ import {
   Palette,
   PaintBucket,
   Layout,
-  Eye
+  Eye,
+  ArrowRight,
+  Info
 } from "lucide-react";
 
 const CSSPlayground: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<CSSTheme>(cssThemes[0]);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [showWelcomeGuide, setShowWelcomeGuide] = useState<boolean>(true);
   const { toast: uiToast } = useToast();
   
   // Handle theme change with improved feedback
@@ -50,13 +53,21 @@ const CSSPlayground: React.FC = () => {
   const handleImportDesign = () => {
     // Simulate import functionality
     toast.info("Import design functionality", {
-      description: "This would allow importing designs from files or URLs",
+      description: "Upload a CSS file or design configuration to import your styles",
+      duration: 3000,
+    });
+  };
+
+  const dismissWelcomeGuide = () => {
+    setShowWelcomeGuide(false);
+    toast.success("Welcome guide dismissed", {
+      description: "You can open it again from the Help menu if needed",
       duration: 3000,
     });
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-background/80">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90 overflow-x-hidden">
       <header className="border-b backdrop-blur-md sticky top-0 z-10 shadow-sm bg-background/90">
         <div className="container py-3">
           <div className="flex items-center justify-between">
@@ -72,6 +83,7 @@ const CSSPlayground: React.FC = () => {
                 size="sm" 
                 onClick={handleImportDesign}
                 className="flex items-center gap-2 rounded-full"
+                data-tooltip="Import existing CSS or design configuration"
               >
                 <Upload size={16} />
                 Import
@@ -81,6 +93,7 @@ const CSSPlayground: React.FC = () => {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-full hover:bg-muted/50"
+                data-tooltip="View source code on GitHub"
               >
                 <Github size={16} />
                 GitHub
@@ -90,6 +103,7 @@ const CSSPlayground: React.FC = () => {
                 size="sm" 
                 onClick={toggleDarkMode}
                 className="animate-fade-in flex items-center gap-2 rounded-full"
+                data-tooltip={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
                 {isDarkMode ? (
                   <>
@@ -109,6 +123,42 @@ const CSSPlayground: React.FC = () => {
       </header>
       
       <main className="container py-8 animate-fade-in">
+        {showWelcomeGuide && (
+          <div className="mb-6 bg-primary/5 border border-primary/20 rounded-xl p-4 relative animation-reveal">
+            <button 
+              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              onClick={dismissWelcomeGuide}
+            >
+              ✕
+            </button>
+            <h2 className="text-lg font-medium flex items-center gap-2 mb-3">
+              <Info size={18} className="text-primary" />
+              Welcome to CSS Playground
+            </h2>
+            <div className="text-sm text-muted-foreground space-y-2">
+              <p>
+                This interactive tool helps you experiment with CSS and design in real-time. Follow these simple steps:
+              </p>
+              <ol className="list-decimal pl-5 space-y-1">
+                <li><span className="font-medium text-foreground">Modify Variables</span>: Adjust colors, spacing and more in the control panel</li>
+                <li><span className="font-medium text-foreground">Try Different Themes</span>: Switch between design styles like Glassmorphism</li>
+                <li><span className="font-medium text-foreground">Preview Changes</span>: See your modifications instantly in the preview panel</li>
+                <li><span className="font-medium text-foreground">Export Your CSS</span>: Download your custom styles when you're done</li>
+              </ol>
+              <div className="pt-2">
+                <Button
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={dismissWelcomeGuide}
+                >
+                  <ArrowRight size={16} />
+                  Get Started
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
@@ -116,11 +166,21 @@ const CSSPlayground: React.FC = () => {
               <p className="text-muted-foreground text-sm">Customize your CSS variables and see real-time changes</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="rounded-full flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full flex items-center gap-2"
+                data-tooltip="View and copy the generated code"
+              >
                 <Code size={16} />
                 Export Code
               </Button>
-              <Button variant="default" size="sm" className="rounded-full flex items-center gap-2">
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="rounded-full flex items-center gap-2"
+                data-tooltip="Preview your design in fullscreen"
+              >
                 <Eye size={16} />
                 Preview
               </Button>
@@ -130,12 +190,14 @@ const CSSPlayground: React.FC = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2">
-            <CSSControlPanel 
-              onThemeChange={handleThemeChange}
-              currentTheme={currentTheme}
-              isDarkMode={isDarkMode}
-              onToggleDarkMode={toggleDarkMode}
-            />
+            <div className="sticky top-24">
+              <CSSControlPanel 
+                onThemeChange={handleThemeChange}
+                currentTheme={currentTheme}
+                isDarkMode={isDarkMode}
+                onToggleDarkMode={toggleDarkMode}
+              />
+            </div>
           </div>
           <div className="lg:col-span-3 animate-scale-in">
             <div className="bg-card border rounded-xl shadow-lg h-[70vh] overflow-hidden transition-all hover:shadow-xl">
@@ -147,7 +209,12 @@ const CSSPlayground: React.FC = () => {
                 </div>
                 <div className="text-xs text-muted-foreground">preview.html</div>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-full">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-7 w-7 p-0 rounded-full"
+                    data-tooltip="Change layout view"
+                  >
                     <Layout size={14} />
                   </Button>
                 </div>
@@ -166,6 +233,7 @@ const CSSPlayground: React.FC = () => {
             This interactive CSS playground allows you to experiment with various CSS properties and see real-time results. 
             Tweak colors, spacing, border radius, and more to create your perfect design. 
             Try different themes like Glassmorphism, Neumorphism and Modern with a single click.
+            When you're done, export your CSS to use in your projects.
           </p>
           <div className="mt-4">
             <h3 className="text-sm font-medium text-secondary-foreground">Tips:</h3>
@@ -191,8 +259,8 @@ const CSSPlayground: React.FC = () => {
       </main>
       
       <footer className="border-t mt-8 bg-muted/30">
-        <div className="container py-6 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">CSS Playground - Experiment with CSS in real-time</p>
+        <div className="container py-6 flex flex-col sm:flex-row items-center justify-between">
+          <p className="text-sm text-muted-foreground mb-2 sm:mb-0">CSS Playground - Experiment with CSS in real-time</p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Privacy</a>
             <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Terms</a>

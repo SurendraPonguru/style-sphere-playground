@@ -122,6 +122,10 @@ export default {
 				'reveal-right': {
 					from: { transform: 'translateX(-20px)', opacity: '0' },
 					to: { transform: 'translateX(0)', opacity: '1' }
+				},
+				'tooltip-appear': {
+					from: { opacity: '0', transform: 'translateY(5px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			animation: {
@@ -135,7 +139,8 @@ export default {
 				'scale-in': 'scale-in 0.3s ease-out',
 				'float': 'float 3s ease-in-out infinite',
 				'shimmer': 'shimmer 2s linear infinite',
-				'reveal-right': 'reveal-right 0.5s ease-out forwards'
+				'reveal-right': 'reveal-right 0.5s ease-out forwards',
+				'tooltip-appear': 'tooltip-appear 0.2s ease-out forwards'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -144,5 +149,72 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addComponents, theme }) {
+			addComponents({
+				'[data-tooltip]': {
+					'position': 'relative',
+				},
+				'[data-tooltip]:hover::before': {
+					'content': 'attr(data-tooltip)',
+					'position': 'absolute',
+					'bottom': '100%',
+					'left': '50%',
+					'transform': 'translateX(-50%)',
+					'marginBottom': '5px',
+					'padding': '6px 10px',
+					'borderRadius': theme('borderRadius.md'),
+					'backgroundColor': 'hsl(var(--foreground))',
+					'color': 'hsl(var(--background))',
+					'fontSize': '0.75rem',
+					'whiteSpace': 'nowrap',
+					'zIndex': '50',
+					'pointerEvents': 'none',
+					'animation': theme('animation.tooltip-appear'),
+				},
+				'[data-tooltip]:hover::after': {
+					'content': '""',
+					'position': 'absolute',
+					'bottom': '100%',
+					'left': '50%',
+					'transform': 'translateX(-50%)',
+					'marginBottom': '0',
+					'borderWidth': '5px',
+					'borderStyle': 'solid',
+					'borderColor': 'hsl(var(--foreground)) transparent transparent transparent',
+					'zIndex': '50',
+					'pointerEvents': 'none',
+				},
+				'.tooltip-top-left[data-tooltip]:hover::before': {
+					'left': '0',
+					'transform': 'translateX(0)',
+				},
+				'.tooltip-top-left[data-tooltip]:hover::after': {
+					'left': '15px',
+					'transform': 'translateX(0)',
+				},
+				'.interactive-hint': {
+					'position': 'relative',
+				},
+				'.interactive-hint::after': {
+					'content': '"Try me!"',
+					'position': 'absolute',
+					'top': '-25px',
+					'left': '50%',
+					'transform': 'translateX(-50%)',
+					'backgroundColor': 'hsl(var(--primary))',
+					'color': 'white',
+					'padding': '2px 8px',
+					'borderRadius': theme('borderRadius.md'),
+					'fontSize': '0.7rem',
+					'opacity': '0',
+					'transition': 'opacity 0.3s',
+				},
+				'.interactive-hint:hover::after': {
+					'opacity': '1',
+				},
+			})
+		}
+	],
 } satisfies Config;
