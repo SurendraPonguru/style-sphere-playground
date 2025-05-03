@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import CSSControlPanel from "@/components/CSSControlPanel";
 import PreviewPanel from "@/components/PreviewPanel";
 import { cssThemes, CSSTheme } from "@/utils/cssPlaygroundUtils";
+import { Download, Upload, Github, Moon, Sun } from "lucide-react";
 
 const CSSPlayground: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<CSSTheme>(cssThemes[0]);
@@ -33,6 +34,15 @@ const CSSPlayground: React.FC = () => {
     setIsDarkMode(prefersDark);
     document.documentElement.classList.toggle("dark", prefersDark);
   }, []);
+
+  // Handle design import
+  const handleImportDesign = () => {
+    // Simulate import functionality
+    toast.info("Import design functionality", {
+      description: "This would allow importing designs from files or URLs",
+      duration: 3000,
+    });
+  };
   
   return (
     <div className="min-h-screen bg-background">
@@ -45,21 +55,41 @@ const CSSPlayground: React.FC = () => {
               </span>
             </h1>
             <div className="flex items-center gap-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleImportDesign}
+                className="flex items-center gap-2"
+              >
+                <Upload size={16} />
+                Import
+              </Button>
               <a 
                 href="https://github.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
               >
+                <Github size={16} />
                 GitHub
               </a>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={toggleDarkMode}
-                className="animate-fade-in"
+                className="animate-fade-in flex items-center gap-2"
               >
-                {isDarkMode ? "Light Mode" : "Dark Mode"}
+                {isDarkMode ? (
+                  <>
+                    <Sun size={16} />
+                    Light Mode
+                  </>
+                ) : (
+                  <>
+                    <Moon size={16} />
+                    Dark Mode
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -99,6 +129,8 @@ const CSSPlayground: React.FC = () => {
               <li>Explore animations and interactive elements in the preview panel</li>
               <li>Export your CSS to use in your own projects</li>
               <li>Try hovering over elements to see interactive effects</li>
+              <li>Drag and drop elements to rearrange the layout</li>
+              <li>Try gradient colors for more vibrant designs</li>
             </ul>
           </div>
         </div>

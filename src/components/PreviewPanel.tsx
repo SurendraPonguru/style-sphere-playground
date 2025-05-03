@@ -1,19 +1,40 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CSSTheme } from "@/utils/cssPlaygroundUtils";
 import { cn } from "@/lib/utils";
+import { 
+  Palette, 
+  Move, 
+  ArrowRight, 
+  Plus, 
+  Check, 
+  X, 
+  Gradient,
+  ArrowLeft, 
+  ArrowUp, 
+  ArrowDown 
+} from "lucide-react";
 
 interface PreviewPanelProps {
   currentTheme: CSSTheme;
   isDarkMode: boolean;
 }
 
+interface DraggableElement {
+  id: string;
+  type: string;
+  position: { x: number; y: number };
+  content: string;
+}
+
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeAnimation, setActiveAnimation] = useState("");
   const [activeTab, setActiveTab] = useState("elements");
+  const [draggableElements, setDraggableElements] = useState<DraggableElement[]>([]);
+  const [draggedElement, setDraggedElement] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   
   const animations = [
     { name: "", label: "None" },
@@ -42,6 +63,61 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
       [id]: isHovering
     }));
   };
+
+  // Handle element drag start
+  const handleDragStart = (e: React.DragEvent, type: string) => {
+    e.dataTransfer.setData("elementType", type);
+    setDraggedElement(type);
+  };
+
+  // Handle element drag over
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  // Handle element drop
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData("elementType");
+    if (!canvasRef.current) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const newElement: DraggableElement = {
+      id: `element-${Date.now()}`,
+      type,
+      position: { x, y },
+      content: `${type.charAt(0).toUpperCase()}${type.slice(1)}`
+    };
+    
+    setDraggableElements(prev => [...prev, newElement]);
+    setDraggedElement(null);
+  };
+
+  // Handle element move
+  const handleElementMove = (e: React.MouseEvent, index: number) => {
+    if (!canvasRef.current) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setDraggableElements(prev => {
+      const newElements = [...prev];
+      newElements[index] = {
+        ...newElements[index],
+        position: { x, y }
+      };
+      return newElements;
+    });
+  };
+
+  // Handle element remove
+  const handleElementRemove = (id: string) => {
+    setDraggableElements(prev => prev.filter(element => element.id !== id));
+  };
   
   return (
     <div className={`h-full overflow-y-auto ${currentTheme.className} bg-gradient-to-br from-card/80 to-card`}>
@@ -58,7 +134,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
         </div>
         
         <Tabs defaultValue="elements" value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className="grid grid-cols-3 mb-6 bg-background/80 backdrop-blur-sm p-1 rounded-full">
+          <TabsList className="grid grid-cols-4 mb-6 bg-background/80 backdrop-blur-sm p-1 rounded-full">
             <TabsTrigger 
               value="elements" 
               className={`rounded-full transition-all duration-300 data-[state=active]:shadow-md`}
@@ -77,6 +153,12 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
             >
               Animations
             </TabsTrigger>
+            <TabsTrigger 
+              value="draggable" 
+              className={`rounded-full transition-all duration-300 data-[state=active]:shadow-md`}
+            >
+              Draggable
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="elements" className="space-y-8 animation-reveal">
@@ -84,28 +166,52 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
               <h3 className="font-medium text-lg border-b pb-2">Buttons</h3>
               <div className="flex flex-wrap gap-4">
                 <button 
-                  className={cn("preview-button interactive", hoverStates["btn1"] ? "shadow-lg" : "")}
+                  className={cn("preview-button interactive flex items-center gap-2", hoverStates["btn1"] ? "shadow-lg" : "")}
                   onMouseEnter={() => handleHover("btn1", true)}
                   onMouseLeave={() => handleHover("btn1", false)}
                 >
-                  Button
+                  <ArrowRight size={16} /> Button
                 </button>
-                <button className="preview-button opacity-60 cursor-not-allowed" disabled>Disabled</button>
+                <button className="preview-button opacity-60 cursor-not-allowed flex items-center gap-2" disabled>
+                  <X size={16} /> Disabled
+                </button>
                 <button 
-                  className={cn("preview-button interactive", hoverStates["btn2"] ? "shadow-lg" : "")}
+                  className={cn("preview-button interactive flex items-center gap-2", hoverStates["btn2"] ? "shadow-lg" : "")}
                   style={{backgroundColor: "var(--css-secondary-color)"}}
                   onMouseEnter={() => handleHover("btn2", true)}
                   onMouseLeave={() => handleHover("btn2", false)}
                 >
-                  Secondary
+                  <Check size={16} /> Secondary
                 </button>
                 <button 
-                  className={cn("preview-button interactive", hoverStates["btn3"] ? "shadow-lg" : "")}
+                  className={cn("preview-button interactive flex items-center gap-2", hoverStates["btn3"] ? "shadow-lg" : "")}
                   style={{backgroundColor: "var(--css-accent-color)"}}
                   onMouseEnter={() => handleHover("btn3", true)}
                   onMouseLeave={() => handleHover("btn3", false)}
                 >
-                  Accent
+                  <Plus size={16} /> Accent
+                </button>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="font-medium text-lg border-b pb-2">Gradient Buttons</h3>
+              <div className="flex flex-wrap gap-4">
+                <button 
+                  className="preview-button interactive flex items-center gap-2 bg-gradient"
+                  style={{
+                    background: "linear-gradient(90deg, var(--css-primary-color), var(--css-secondary-color))"
+                  }}
+                >
+                  <Gradient size={16} /> Gradient
+                </button>
+                <button 
+                  className="preview-button interactive flex items-center gap-2 bg-gradient"
+                  style={{
+                    background: "linear-gradient(90deg, var(--css-secondary-color), var(--css-accent-color))"
+                  }}
+                >
+                  <Palette size={16} /> Colors
                 </button>
               </div>
             </div>
@@ -116,6 +222,31 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                 <input className="preview-input" type="text" placeholder="Text input" />
                 <input className="preview-input" type="email" placeholder="Email input" />
                 <input className="preview-input" type="password" placeholder="Password input" />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium text-lg border-b pb-2">Directional Buttons</h3>
+              <div className="grid grid-cols-3 gap-2 max-w-[200px] mx-auto">
+                <div></div>
+                <button className="preview-button interactive flex items-center justify-center">
+                  <ArrowUp size={18} />
+                </button>
+                <div></div>
+                <button className="preview-button interactive flex items-center justify-center">
+                  <ArrowLeft size={18} />
+                </button>
+                <div className="preview-button flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                  <Move size={18} />
+                </div>
+                <button className="preview-button interactive flex items-center justify-center">
+                  <ArrowRight size={18} />
+                </button>
+                <div></div>
+                <button className="preview-button interactive flex items-center justify-center">
+                  <ArrowDown size={18} />
+                </button>
+                <div></div>
               </div>
             </div>
           </TabsContent>
@@ -289,6 +420,103 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                     <p className="text-center">This card scales slightly on hover</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="draggable" className="space-y-4 animation-reveal">
+            <div className="mb-6">
+              <h3 className="font-medium text-lg border-b pb-2 mb-4">Drag and Drop Elements</h3>
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div 
+                  className="preview-button interactive cursor-move flex items-center gap-2"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "button")}
+                >
+                  <Move size={16} /> Drag Button
+                </div>
+                <div 
+                  className="preview-card p-3 cursor-move w-auto inline-block"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "card")}
+                >
+                  <Move size={16} /> Drag Card
+                </div>
+                <div 
+                  className="preview-input p-2 cursor-move flex items-center"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "input")}
+                >
+                  <Move size={16} /> Drag Input
+                </div>
+              </div>
+              
+              <div 
+                ref={canvasRef}
+                className="h-[300px] border-2 border-dashed border-primary/30 rounded-lg relative overflow-hidden bg-background/50"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
+                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
+                  {draggedElement ? (
+                    <p>Drop the {draggedElement} here</p>
+                  ) : (
+                    <p>Drag elements here</p>
+                  )}
+                </div>
+                
+                {draggableElements.map((element, index) => (
+                  <div 
+                    key={element.id}
+                    className="absolute cursor-move"
+                    style={{
+                      left: `${element.position.x}px`,
+                      top: `${element.position.y}px`,
+                    }}
+                    draggable
+                    onDrag={(e: React.MouseEvent) => handleElementMove(e, index)}
+                  >
+                    {element.type === "button" && (
+                      <div className="flex items-center">
+                        <button className="preview-button">{element.content}</button>
+                        <button 
+                          className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
+                          onClick={() => handleElementRemove(element.id)}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    )}
+                    {element.type === "card" && (
+                      <div className="flex items-start">
+                        <div className="preview-card p-3">
+                          <p>{element.content}</p>
+                        </div>
+                        <button 
+                          className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
+                          onClick={() => handleElementRemove(element.id)}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    )}
+                    {element.type === "input" && (
+                      <div className="flex items-center">
+                        <input className="preview-input" placeholder={element.content} />
+                        <button 
+                          className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
+                          onClick={() => handleElementRemove(element.id)}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 text-xs text-muted-foreground">
+                <p>Note: You can drag elements from above into the canvas. Drag the elements in the canvas to reposition them.</p>
               </div>
             </div>
           </TabsContent>

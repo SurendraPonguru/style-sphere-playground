@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   CSSVariable,
   CSSTheme,
@@ -18,6 +19,17 @@ import {
   generateCSS
 } from "@/utils/cssPlaygroundUtils";
 import { toast } from "sonner";
+import { 
+  Copy, 
+  Download, 
+  FileText, 
+  Code, 
+  Palette, 
+  Gradient, 
+  Plus, 
+  Trash,
+  PaintBucket
+} from "lucide-react";
 
 interface CSSControlPanelProps {
   onThemeChange: (theme: CSSTheme) => void;
@@ -33,6 +45,10 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
   onToggleDarkMode
 }) => {
   const [variables, setVariables] = useState<CSSVariable[]>([...defaultCssVariables]);
+  const [useGradients, setUseGradients] = useState<boolean>(false);
+  const [gradientStart, setGradientStart] = useState<string>("#4f46e5");
+  const [gradientEnd, setGradientEnd] = useState<string>("#ec4899");
+  const [gradientDirection, setGradientDirection] = useState<string>("90deg");
   
   // Update CSS variable in the DOM and state
   const handleVariableChange = (index: number, value: string) => {
@@ -45,6 +61,56 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
     updateCSSVariable(variable.name, cssValue);
     
     setVariables(updatedVariables);
+  };
+
+  // Add a new custom variable
+  const handleAddVariable = () => {
+    const newVar: CSSVariable = {
+      name: `--css-custom-color-${variables.length}`,
+      label: `Custom Color ${variables.length}`,
+      value: "#3b82f6",
+      type: "color"
+    };
+    
+    setVariables([...variables, newVar]);
+    updateCSSVariable(newVar.name, newVar.value);
+    
+    toast.success("Custom variable added", {
+      description: `New variable ${newVar.label} has been added`,
+    });
+  };
+
+  // Remove a custom variable
+  const handleRemoveVariable = (index: number) => {
+    if (index < defaultCssVariables.length) {
+      toast.error("Cannot remove default variables");
+      return;
+    }
+    
+    const updatedVariables = [...variables];
+    const removedVariable = updatedVariables.splice(index, 1)[0];
+    
+    setVariables(updatedVariables);
+    
+    toast.success("Variable removed", {
+      description: `${removedVariable.label} has been removed`,
+    });
+  };
+
+  // Apply gradient as background
+  const handleApplyGradient = () => {
+    const gradientValue = `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`;
+    document.documentElement.style.setProperty('--css-gradient-background', gradientValue);
+    
+    // Add a class to preview elements with gradient
+    const previewButtons = document.querySelectorAll('.bg-gradient');
+    previewButtons.forEach(button => {
+      (button as HTMLElement).style.background = gradientValue;
+    });
+    
+    toast.success("Gradient applied", {
+      description: "Gradient background has been applied to selected elements",
+    });
   };
   
   // Copy CSS to clipboard
@@ -73,37 +139,70 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
   
   return (
     <div className="bg-card border rounded-lg shadow-md h-full overflow-y-auto">
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold">CSS Playground Controls</h2>
+      <div className="p-4 border-b bg-muted/20">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Palette size={18} className="text-primary" />
+          CSS Playground Controls
+        </h2>
       </div>
       
       <Tabs defaultValue="variables" className="p-4">
-        <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="variables">Variables</TabsTrigger>
-          <TabsTrigger value="themes">Themes</TabsTrigger>
+        <TabsList className="grid grid-cols-3 mb-4">
+          <TabsTrigger value="variables" className="flex items-center gap-1">
+            <Palette size={14} /> Variables
+          </TabsTrigger>
+          <TabsTrigger value="themes" className="flex items-center gap-1">
+            <PaintBucket size={14} /> Themes
+          </TabsTrigger>
+          <TabsTrigger value="gradients" className="flex items-center gap-1">
+            <Gradient size={14} /> Gradients
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="variables" className="space-y-6">
-          <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium">CSS Variables</h3>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="flex items-center gap-2"
+              onClick={handleAddVariable}
+            >
+              <Plus size={14} /> Add Variable
+            </Button>
+          </div>
+          
+          <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
             {variables.map((variable, index) => (
-              <div key={variable.name} className="space-y-2">
+              <div key={variable.name} className="space-y-2 group relative">
                 <div className="flex items-center justify-between">
                   <Label htmlFor={variable.name}>{variable.label}</Label>
-                  {variable.type === 'color' && (
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-6 h-6 rounded-full border" 
-                        style={{ backgroundColor: variable.value }}
-                      />
-                      <span className="text-xs text-muted-foreground">{variable.value}</span>
-                    </div>
-                  )}
-                  
-                  {variable.type === 'number' && (
-                    <span className="text-xs text-muted-foreground">
-                      {variable.value}{variable.unit}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {variable.type === 'color' && (
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-6 h-6 rounded-full border" 
+                          style={{ backgroundColor: variable.value }}
+                        />
+                        <span className="text-xs text-muted-foreground">{variable.value}</span>
+                      </div>
+                    )}
+                    
+                    {variable.type === 'number' && (
+                      <span className="text-xs text-muted-foreground">
+                        {variable.value}{variable.unit}
+                      </span>
+                    )}
+                    
+                    {index >= defaultCssVariables.length && (
+                      <button 
+                        className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => handleRemoveVariable(index)}
+                      >
+                        <Trash size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 
                 {variable.type === 'color' && (
@@ -160,6 +259,7 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
                 variant={isDarkMode ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleDarkMode}
+                className="flex items-center gap-2"
               >
                 {isDarkMode ? "Light Mode" : "Dark Mode"}
               </Button>
@@ -181,22 +281,101 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
             </div>
           </div>
         </TabsContent>
+        
+        <TabsContent value="gradients" className="space-y-6">
+          <div>
+            <h3 className="text-lg font-medium mb-4">Gradient Controls</h3>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="gradient-start">Gradient Start Color</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    type="color"
+                    id="gradient-start"
+                    value={gradientStart}
+                    onChange={(e) => setGradientStart(e.target.value)}
+                    className="w-12 h-10 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={gradientStart}
+                    onChange={(e) => setGradientStart(e.target.value)}
+                    className="flex-1"
+                    placeholder="#RRGGBB"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="gradient-end">Gradient End Color</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    type="color"
+                    id="gradient-end"
+                    value={gradientEnd}
+                    onChange={(e) => setGradientEnd(e.target.value)}
+                    className="w-12 h-10 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={gradientEnd}
+                    onChange={(e) => setGradientEnd(e.target.value)}
+                    className="flex-1"
+                    placeholder="#RRGGBB"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="gradient-direction">Direction (degrees)</Label>
+                <div className="flex items-center space-x-2">
+                  <Slider
+                    id="gradient-direction"
+                    min={0}
+                    max={360}
+                    step={45}
+                    value={[parseInt(gradientDirection)]}
+                    onValueChange={(value) => setGradientDirection(`${value[0]}deg`)}
+                    className="flex-1"
+                  />
+                  <Input
+                    type="text"
+                    value={gradientDirection}
+                    onChange={(e) => setGradientDirection(e.target.value)}
+                    className="w-20"
+                  />
+                </div>
+              </div>
+              
+              <div className="h-20 rounded-lg border mt-4" style={{
+                background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`
+              }}></div>
+              
+              <Button onClick={handleApplyGradient} className="w-full mt-2 flex items-center gap-2">
+                <Gradient size={16} /> Apply Gradient to Elements
+              </Button>
+            </div>
+          </div>
+        </TabsContent>
       </Tabs>
       
       <div className="p-4 border-t bg-muted/20">
-        <h3 className="font-medium mb-2">Export Options</h3>
+        <h3 className="font-medium mb-2 flex items-center gap-2">
+          <Download size={16} /> Export Options
+        </h3>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleCopyCSS}>
-            Copy CSS
+          <Button variant="outline" size="sm" onClick={handleCopyCSS} className="flex items-center gap-2">
+            <Copy size={14} /> Copy CSS
           </Button>
-          <Button variant="outline" size="sm" onClick={handleExportCSS}>
-            Export CSS
+          <Button variant="outline" size="sm" onClick={handleExportCSS} className="flex items-center gap-2">
+            <FileText size={14} /> Export CSS
           </Button>
-          <Button variant="outline" size="sm" onClick={handleExportHTML}>
-            Export HTML
+          <Button variant="outline" size="sm" onClick={handleExportHTML} className="flex items-center gap-2">
+            <Code size={14} /> Export HTML
           </Button>
-          <Button variant="default" size="sm" onClick={handleExportFullProject}>
-            Export Full Project
+          <Button variant="default" size="sm" onClick={handleExportFullProject} className="flex items-center gap-2">
+            <Download size={14} /> Full Project
           </Button>
         </div>
       </div>

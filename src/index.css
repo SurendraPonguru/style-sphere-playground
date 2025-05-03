@@ -52,6 +52,7 @@
     --css-animation-duration: 0.3s;
     --css-shadow: 0 4px 15px -3px rgb(0 0 0 / 0.1), 0 2px 6px -4px rgb(0 0 0 / 0.1);
     --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --css-gradient-background: linear-gradient(90deg, #4f46e5, #ec4899);
   }
 
   .dark {
@@ -99,6 +100,7 @@
     --css-animation-duration: 0.3s;
     --css-shadow: 0 4px 15px -3px rgb(0 0 0 / 0.5), 0 2px 6px -4px rgb(0 0 0 / 0.5);
     --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --css-gradient-background: linear-gradient(90deg, #6366f1, #f472b6);
   }
 }
 
@@ -127,6 +129,7 @@
   --css-backdrop-filter: blur(10px);
   --css-border: 1px solid rgba(255, 255, 255, 0.18);
   --css-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(236, 72, 153, 0.7));
 }
 
 .dark .theme-glassmorphism {
@@ -136,6 +139,7 @@
   --css-background-color: rgba(30, 41, 59, 0.2);
   --css-text-color: rgba(243, 244, 246, 0.9);
   --css-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --css-gradient-background: linear-gradient(135deg, rgba(129, 140, 248, 0.8), rgba(244, 114, 182, 0.7));
 }
 
 .theme-neumorphism {
@@ -150,6 +154,7 @@
   --css-animation-duration: 0.3s;
   --css-shadow: 8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff;
   --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(225deg, #e0e5ec, #c8d0e0);
 }
 
 .dark .theme-neumorphism {
@@ -160,6 +165,7 @@
   --css-text-color: #f3f4f6;
   --css-shadow: 8px 8px 16px #1a1e22, -8px -8px 16px #404954;
   --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(225deg, #2d333b, #1a1e22);
 }
 
 .theme-brutalist {
@@ -175,6 +181,7 @@
   --css-shadow: 5px 5px 0px #000000;
   --css-border: 3px solid #000000;
   --css-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(90deg, #000000, #ff0000);
 }
 
 .dark .theme-brutalist {
@@ -186,6 +193,7 @@
   --css-border: 3px solid #ffffff;
   --css-shadow: 5px 5px 0px #ffffff;
   --css-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(90deg, #ffffff, #ff0000);
 }
 
 /* Enhanced Theme - Modern */
@@ -202,6 +210,7 @@
   --css-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --css-border: 1px solid rgba(0, 0, 0, 0.05);
   --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(135deg, #8b5cf6, #f43f5e);
 }
 
 .dark .theme-modern {
@@ -213,6 +222,7 @@
   --css-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
   --css-border: 1px solid rgba(255, 255, 255, 0.05);
   --css-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --css-gradient-background: linear-gradient(135deg, #a78bfa, #fb7185);
 }
 
 /* Utility Classes for Preview Panel - Enhanced */
@@ -232,6 +242,10 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .preview-button:hover {
@@ -241,6 +255,10 @@
 
 .preview-button:active {
   transform: translateY(0);
+}
+
+.preview-button.bg-gradient {
+  background: var(--css-gradient-background);
 }
 
 .preview-card {
@@ -267,6 +285,7 @@
   font-size: var(--css-font-size);
   border: var(--css-border, 1px solid var(--css-primary-color));
   transition: var(--css-transition);
+  display: inline-block;
 }
 
 .preview-input:focus {
@@ -290,6 +309,34 @@
   backdrop-filter: var(--css-backdrop-filter, none);
   transition: var(--css-transition);
   animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--css-gradient-background);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Draggable element styles */
+.draggable {
+  cursor: move;
+  user-select: none;
+}
+
+.drag-area {
+  min-height: 200px;
+  border: 2px dashed var(--css-primary-color);
+  background-color: var(--css-background-color);
+  border-radius: var(--css-border-radius);
+  position: relative;
+}
+
+.drag-over {
+  border: 2px solid var(--css-primary-color);
+  background-color: rgba(var(--css-primary-color), 0.1);
 }
 
 /* Enhanced animations with smoother easing */
@@ -433,3 +480,29 @@
 .preview-button.interactive:hover::before {
   left: 100%;
 }
+
+/* Drag and drop styles */
+.dropzone {
+  border: 2px dashed var(--css-primary-color);
+  border-radius: var(--css-border-radius);
+  transition: var(--css-transition);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone.active {
+  border-color: var(--css-accent-color);
+  background-color: rgba(var(--css-accent-color), 0.1);
+}
+
+.draggable-item {
+  cursor: grab;
+  user-select: none;
+}
+
+.draggable-item:active {
+  cursor: grabbing;
+}
+
