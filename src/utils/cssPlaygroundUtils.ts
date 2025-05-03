@@ -440,7 +440,8 @@ export const generateCSS = (variables: CSSVariable[]): string => {
 .preview {
   flex: 2;
   min-width: 300px;
-  height: 500px;
+  height: 100%;
+  min-height: 600px;
   border: var(--css-border);
   border-radius: var(--css-border-radius);
   overflow: auto;
@@ -467,6 +468,57 @@ export const generateHTML = (): string => {
   <title>CSS Playground Export</title>
   <style>
     /* CSS will be inserted here from generateCSS() */
+    
+    /* Additional styles to ensure full height */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    
+    /* Make sure content fills the height */
+    .css-playground-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    /* Ensure preview panel has appropriate height */
+    .preview {
+      min-height: 600px;
+      height: 100%;
+      overflow: auto;
+      flex: 1;
+    }
+    
+    /* Tab content should also maintain height */
+    .tab-content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Animation demos should be consistent with playground */
+    .animation-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .animation-item {
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -489,47 +541,67 @@ export const generateHTML = (): string => {
       </div>
       
       <div class="preview">
-        <div class="preview-card">
-          <h2>Button Components</h2>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
-            <button class="preview-button">Button</button>
-            <button class="preview-button bg-gradient">Gradient</button>
-            <button class="preview-button interactive">Interactive</button>
-            <button class="preview-button" disabled style="opacity: 0.6; cursor: not-allowed;">Disabled</button>
-          </div>
-          
-          <h2>Card Components</h2>
-          <div class="preview-card" style="margin: 1rem 0; border: 1px solid var(--css-secondary-color);">
-            <h3>Nested Card</h3>
-            <p>This is a card inside another card component.</p>
-          </div>
-          
-          <h2>Form Components</h2>
-          <div style="margin: 1rem 0;">
-            <div style="margin-bottom: 0.5rem;">
-              <label style="display: block; margin-bottom: 0.25rem;">Text Input</label>
-              <input type="text" class="preview-input" style="width: 100%;" placeholder="Enter text here">
+        <div class="preview-card" style="height: 100%; overflow-y: auto;">
+          <div class="tab-content">
+            <h2>Button Components</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
+              <button class="preview-button">Button</button>
+              <button class="preview-button bg-gradient">Gradient</button>
+              <button class="preview-button interactive">Interactive</button>
+              <button class="preview-button" disabled style="opacity: 0.6; cursor: not-allowed;">Disabled</button>
             </div>
-            <div style="margin-bottom: 0.5rem;">
-              <label style="display: block; margin-bottom: 0.25rem;">Email Input</label>
-              <input type="email" class="preview-input" style="width: 100%;" placeholder="Enter email here">
+            
+            <h2>Card Components</h2>
+            <div class="preview-card" style="margin: 1rem 0; border: 1px solid var(--css-secondary-color);">
+              <h3>Nested Card</h3>
+              <p>This is a card inside another card component.</p>
             </div>
-            <button class="preview-button" style="margin-top: 1rem;">Submit</button>
-          </div>
-          
-          <h2>Animation Examples</h2>
-          <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;">
-            <div class="preview-card animation-pulse" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              Pulse
+            
+            <h2>Form Components</h2>
+            <div style="margin: 1rem 0;">
+              <div style="margin-bottom: 0.5rem;">
+                <label style="display: block; margin-bottom: 0.25rem;">Text Input</label>
+                <input type="text" class="preview-input" style="width: 100%;" placeholder="Enter text here">
+              </div>
+              <div style="margin-bottom: 0.5rem;">
+                <label style="display: block; margin-bottom: 0.25rem;">Email Input</label>
+                <input type="email" class="preview-input" style="width: 100%;" placeholder="Enter email here">
+              </div>
+              <button class="preview-button" style="margin-top: 1rem;">Submit</button>
             </div>
-            <div class="preview-card animation-bounce" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              Bounce
+            
+            <h2>Animation Examples</h2>
+            <div class="animation-showcase">
+              <div class="preview-card animation-pulse animation-item">
+                Pulse
+              </div>
+              <div class="preview-card animation-bounce animation-item">
+                Bounce
+              </div>
+              <div class="preview-card animation-float animation-item">
+                Float
+              </div>
+              <div class="preview-card animation-spin animation-item">
+                Spin
+              </div>
             </div>
-            <div class="preview-card animation-float" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              Float
+            
+            <h2>Modal Example</h2>
+            <button onclick="openModal()" class="preview-button interactive">Open Modal</button>
+            
+            <h2>Interactive Elements</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;">
+              <div class="tooltip" data-tooltip="This is a tooltip">
+                <button class="preview-button">Hover for tooltip</button>
+              </div>
+              <button class="preview-button interactive">Shimmer Effect</button>
             </div>
-            <div class="preview-card animation-spin" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-              Spin
+            
+            <h2>Color Showcase</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; margin: 1rem 0;">
+              <div style="background-color: var(--css-primary-color); height: 60px; border-radius: var(--css-border-radius);"></div>
+              <div style="background-color: var(--css-secondary-color); height: 60px; border-radius: var(--css-border-radius);"></div>
+              <div style="background-color: var(--css-accent-color); height: 60px; border-radius: var(--css-border-radius);"></div>
             </div>
           </div>
         </div>
@@ -578,17 +650,26 @@ export const generateHTML = (): string => {
       if (backdrop) backdrop.remove();
     }
     
-    // Add modal open button after load
+    // Add animation demo interactive controls
     window.addEventListener('DOMContentLoaded', () => {
-      const container = document.querySelector('.preview-card');
-      if (container) {
-        const modalSection = document.createElement('div');
-        modalSection.innerHTML = \`
-          <h2>Modal Example</h2>
-          <button onclick="openModal()" class="preview-button interactive">Open Modal</button>
-        \`;
-        container.appendChild(modalSection);
-      }
+      // Toggle animations on click
+      document.querySelectorAll('.animation-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const animations = ['animation-pulse', 'animation-bounce', 'animation-float', 'animation-spin'];
+          const currentClass = animations.find(cls => this.classList.contains(cls));
+          
+          if (currentClass) {
+            const currentIndex = animations.indexOf(currentClass);
+            const nextIndex = (currentIndex + 1) % animations.length;
+            
+            this.classList.remove(currentClass);
+            this.classList.add(animations[nextIndex]);
+            
+            // Update text to match animation
+            this.textContent = animations[nextIndex].replace('animation-', '');
+          }
+        });
+      });
     });
   </script>
 </body>
@@ -655,4 +736,3 @@ export const importDesign = (designJSON: string): boolean => {
     return false;
   }
 };
-

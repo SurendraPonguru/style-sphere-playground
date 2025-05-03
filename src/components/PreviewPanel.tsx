@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -120,7 +121,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
   };
   
   return (
-    <div className={`h-full overflow-y-auto ${currentTheme.className} bg-gradient-to-br from-card/80 to-card`}>
+    <div className={`h-full min-h-[600px] overflow-y-auto ${currentTheme.className} bg-gradient-to-br from-card/80 to-card`}>
       <div className="preview-card h-full p-6 relative">
         <div className="text-center mb-6 animation-reveal">
           <h1 className="text-2xl font-bold mb-2 relative inline-block">
@@ -131,6 +132,9 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
             Current Theme: <span className="font-medium text-primary">{currentTheme.label}</span> | 
             Mode: <span className="font-medium">{isDarkMode ? "Dark" : "Light"}</span>
           </p>
+          <div className="text-xs text-muted-foreground mt-1" data-tooltip="This preview matches the exported HTML">
+            What you see here will be exported exactly as shown
+          </div>
         </div>
         
         <Tabs defaultValue="elements" value={activeTab} onValueChange={handleTabChange}>
@@ -169,10 +173,11 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   className={cn("preview-button interactive flex items-center gap-2", hoverStates["btn1"] ? "shadow-lg" : "")}
                   onMouseEnter={() => handleHover("btn1", true)}
                   onMouseLeave={() => handleHover("btn1", false)}
+                  data-tooltip="Click to interact"
                 >
                   <ArrowRight size={16} /> Button
                 </button>
-                <button className="preview-button opacity-60 cursor-not-allowed flex items-center gap-2" disabled>
+                <button className="preview-button opacity-60 cursor-not-allowed flex items-center gap-2" disabled data-tooltip="Disabled state">
                   <X size={16} /> Disabled
                 </button>
                 <button 
@@ -180,6 +185,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   style={{backgroundColor: "var(--css-secondary-color)"}}
                   onMouseEnter={() => handleHover("btn2", true)}
                   onMouseLeave={() => handleHover("btn2", false)}
+                  data-tooltip="Secondary color button"
                 >
                   <Check size={16} /> Secondary
                 </button>
@@ -188,6 +194,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   style={{backgroundColor: "var(--css-accent-color)"}}
                   onMouseEnter={() => handleHover("btn3", true)}
                   onMouseLeave={() => handleHover("btn3", false)}
+                  data-tooltip="Accent color button"
                 >
                   <Plus size={16} /> Accent
                 </button>
@@ -202,6 +209,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   style={{
                     background: "linear-gradient(90deg, var(--css-primary-color), var(--css-secondary-color))"
                   }}
+                  data-tooltip="Primary to Secondary gradient"
                 >
                   <GradientIcon size={16} /> Gradient
                 </button>
@@ -210,6 +218,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   style={{
                     background: "linear-gradient(90deg, var(--css-secondary-color), var(--css-accent-color))"
                   }}
+                  data-tooltip="Secondary to Accent gradient"
                 >
                   <Palette size={16} /> Colors
                 </button>
@@ -229,21 +238,21 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
               <h3 className="font-medium text-lg border-b pb-2">Directional Buttons</h3>
               <div className="grid grid-cols-3 gap-2 max-w-[200px] mx-auto">
                 <div></div>
-                <button className="preview-button interactive flex items-center justify-center">
+                <button className="preview-button interactive flex items-center justify-center" data-tooltip="Up">
                   <ArrowUp size={18} />
                 </button>
                 <div></div>
-                <button className="preview-button interactive flex items-center justify-center">
+                <button className="preview-button interactive flex items-center justify-center" data-tooltip="Left">
                   <ArrowLeft size={18} />
                 </button>
-                <div className="preview-button flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <div className="preview-button flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30" data-tooltip="Center">
                   <Move size={18} />
                 </div>
-                <button className="preview-button interactive flex items-center justify-center">
+                <button className="preview-button interactive flex items-center justify-center" data-tooltip="Right">
                   <ArrowRight size={18} />
                 </button>
                 <div></div>
-                <button className="preview-button interactive flex items-center justify-center">
+                <button className="preview-button interactive flex items-center justify-center" data-tooltip="Down">
                   <ArrowDown size={18} />
                 </button>
                 <div></div>
@@ -285,6 +294,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   onClick={toggleModal}
                   onMouseEnter={() => handleHover("modalBtn", true)}
                   onMouseLeave={() => handleHover("modalBtn", false)}
+                  data-tooltip="Click to see modal"
                 >
                   Open Modal
                 </button>
@@ -362,6 +372,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                     )}
                     style={{backgroundColor: activeAnimation === anim.name ? "var(--css-accent-color)" : undefined}}
                     onClick={() => setActiveAnimation(anim.name)}
+                    data-tooltip={`Apply ${anim.label} animation`}
                   >
                     {anim.label}
                   </button>
@@ -412,11 +423,11 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
               <div className="mt-8 preview-card bg-gradient-to-br from-background to-background/70">
                 <h3 className="font-medium text-lg mb-4">Interactive Elements</h3>
                 <div className="flex flex-wrap gap-4">
-                  <button className="preview-button interactive">Hover Effect</button>
-                  <button className="preview-button interactive" style={{backgroundColor: "var(--css-secondary-color)"}}>
+                  <button className="preview-button interactive" data-tooltip="Hover to see effect">Hover Effect</button>
+                  <button className="preview-button interactive animation-shimmer" style={{backgroundColor: "var(--css-secondary-color)"}} data-tooltip="Shimmer animation">
                     Shimmer Effect
                   </button>
-                  <div className="preview-card w-full mt-4 transition-all hover:scale-[1.02]">
+                  <div className="preview-card w-full mt-4 transition-all hover:scale-[1.02]" data-tooltip="Hover to see scaling">
                     <p className="text-center">This card scales slightly on hover</p>
                   </div>
                 </div>
@@ -432,6 +443,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   className="preview-button interactive cursor-move flex items-center gap-2"
                   draggable
                   onDragStart={(e) => handleDragStart(e, "button")}
+                  data-tooltip="Drag me to canvas"
                 >
                   <Move size={16} /> Drag Button
                 </div>
@@ -439,6 +451,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   className="preview-card p-3 cursor-move w-auto inline-block"
                   draggable
                   onDragStart={(e) => handleDragStart(e, "card")}
+                  data-tooltip="Drag me to canvas"
                 >
                   <Move size={16} /> Drag Card
                 </div>
@@ -446,6 +459,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                   className="preview-input p-2 cursor-move flex items-center"
                   draggable
                   onDragStart={(e) => handleDragStart(e, "input")}
+                  data-tooltip="Drag me to canvas"
                 >
                   <Move size={16} /> Drag Input
                 </div>
@@ -482,6 +496,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                         <button 
                           className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
                           onClick={() => handleElementRemove(element.id)}
+                          data-tooltip="Remove element"
                         >
                           <X size={14} />
                         </button>
@@ -495,6 +510,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                         <button 
                           className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
                           onClick={() => handleElementRemove(element.id)}
+                          data-tooltip="Remove element"
                         >
                           <X size={14} />
                         </button>
@@ -506,6 +522,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ currentTheme, isDarkMode })
                         <button 
                           className="ml-2 p-1 text-destructive hover:bg-destructive/10 rounded"
                           onClick={() => handleElementRemove(element.id)}
+                          data-tooltip="Remove element"
                         >
                           <X size={14} />
                         </button>

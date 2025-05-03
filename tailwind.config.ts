@@ -126,6 +126,10 @@ export default {
 				'tooltip-appear': {
 					from: { opacity: '0', transform: 'translateY(5px)' },
 					to: { opacity: '1', transform: 'translateY(0)' }
+				},
+				'height-transition': {
+					from: { height: '0' },
+					to: { height: 'var(--element-height)' }
 				}
 			},
 			animation: {
@@ -140,12 +144,16 @@ export default {
 				'float': 'float 3s ease-in-out infinite',
 				'shimmer': 'shimmer 2s linear infinite',
 				'reveal-right': 'reveal-right 0.5s ease-out forwards',
-				'tooltip-appear': 'tooltip-appear 0.2s ease-out forwards'
+				'tooltip-appear': 'tooltip-appear 0.2s ease-out forwards',
+				'height-transition': 'height-transition 0.3s ease-out'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'dot-pattern': 'radial-gradient(circle, currentColor 1px, transparent 1px)',
 				'noise': 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.1\'/%3E%3C/svg%3E")',
+			},
+			minHeight: {
+				'600': '600px',
 			}
 		}
 	},
@@ -214,6 +222,23 @@ export default {
 				'.interactive-hint:hover::after': {
 					'opacity': '1',
 				},
+				'.h-min-content': {
+					'height': 'min-content',
+				},
+				'.h-full-export': {
+					'height': '100%',
+					'min-height': '600px',
+				},
+				'.preview-container': {
+					'height': '100%',
+					'min-height': '600px',
+					'display': 'flex',
+					'flexDirection': 'column',
+				},
+				'.preview-content': {
+					'flex': '1',
+					'overflow': 'auto',
+				}
 			})
 		}
 	],
