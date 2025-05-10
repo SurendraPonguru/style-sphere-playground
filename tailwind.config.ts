@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -77,6 +79,9 @@ export default {
 				'glass': '0 8px 32px rgba(0, 0, 0, 0.1)',
 				'neu': '8px 8px 16px #a3b1c6, -8px -8px 16px #ffffff',
 				'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.4)',
+				'highlight': '0 0 15px rgba(255, 255, 255, 0.5)',
+				'inner-glow': 'inset 0 0 10px rgba(255, 255, 255, 0.5)',
+				'depth': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -263,6 +268,23 @@ export default {
 					'display': 'flex',
 					'flex-direction': 'column',
 					'height': '100%',
+				},
+				'.glass-effect': {
+					'backdropFilter': 'blur(10px)',
+					'backgroundColor': 'rgba(255, 255, 255, 0.1)',
+					'border': '1px solid rgba(255, 255, 255, 0.2)',
+					'borderRadius': theme('borderRadius.lg'),
+				},
+				'.hover-lift': {
+					'transition': 'transform 0.3s ease, box-shadow 0.3s ease',
+				},
+				'.hover-lift:hover': {
+					'transform': 'translateY(-5px)',
+					'boxShadow': theme('boxShadow.depth'),
+				},
+				'.preview-gradient-bg': {
+					'background': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%)',
+					'borderRadius': theme('borderRadius.lg'),
 				}
 			})
 		}

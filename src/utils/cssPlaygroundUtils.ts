@@ -1,4 +1,3 @@
-
 // CSS Variable types
 export type CSSVariable = {
   name: string;
@@ -18,21 +17,21 @@ export type CSSTheme = {
   description: string;
 };
 
-// Default CSS variables 
+// Default CSS variables with enhanced values
 export const defaultCssVariables: CSSVariable[] = [
   { name: '--css-primary-color', label: 'Primary Color', value: '#4f46e5', type: 'color' },
   { name: '--css-secondary-color', label: 'Secondary Color', value: '#ec4899', type: 'color' },
   { name: '--css-accent-color', label: 'Accent Color', value: '#10b981', type: 'color' },
   { name: '--css-background-color', label: 'Background Color', value: '#ffffff', type: 'color' },
   { name: '--css-text-color', label: 'Text Color', value: '#1f2937', type: 'color' },
-  { name: '--css-border-radius', label: 'Border Radius', value: '0.5', type: 'number', min: 0, max: 2, step: 0.1, unit: 'rem' },
+  { name: '--css-border-radius', label: 'Border Radius', value: '0.75', type: 'number', min: 0, max: 2, step: 0.1, unit: 'rem' },
   { name: '--css-spacing', label: 'Spacing', value: '1', type: 'number', min: 0, max: 3, step: 0.25, unit: 'rem' },
   { name: '--css-font-size', label: 'Font Size', value: '1', type: 'number', min: 0.5, max: 2, step: 0.1, unit: 'rem' },
   { name: '--css-animation-duration', label: 'Animation Duration', value: '0.3', type: 'number', min: 0, max: 2, step: 0.1, unit: 's' },
-  { name: '--css-gradient-background', label: 'Gradient Background', value: 'linear-gradient(90deg, #4f46e5, #ec4899)', type: 'text' },
+  { name: '--css-gradient-background', label: 'Gradient Background', value: 'linear-gradient(135deg, #4f46e5, #ec4899)', type: 'text' },
 ];
 
-// Available themes
+// Enhanced themes
 export const cssThemes: CSSTheme[] = [
   { 
     name: 'default', 
@@ -63,7 +62,13 @@ export const cssThemes: CSSTheme[] = [
     label: 'Modern', 
     className: 'theme-modern',
     description: 'Contemporary design with smooth gradients and refined interactions'
-  }
+  },
+  { 
+    name: 'candy', 
+    label: 'Candy', 
+    className: 'theme-candy',
+    description: 'Vibrant colors and playful elements with rounded corners'
+  },
 ];
 
 // Update CSS variable in document
@@ -97,6 +102,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   css += `  --css-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1), 0 2px 6px -4px rgba(0, 0, 0, 0.1);\n`;
   css += `  --css-backdrop-filter: blur(10px);\n`;
   css += `  --css-border: 1px solid rgba(0, 0, 0, 0.1);\n`;
+  css += `  font-family: 'Inter', system-ui, sans-serif;\n`;
   css += `}\n\n`;
   
   // Dark mode support for exported CSS
@@ -126,6 +132,8 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .preview-button:hover {
@@ -187,6 +195,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   transition: var(--css-transition);
   display: inline-flex;
   align-items: center;
+  width: 100%;
 }
 
 .preview-input:focus {
@@ -194,7 +203,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   box-shadow: 0 0 0 2px var(--css-primary-color);
 }
 
-/* Modal styles */
+/* Enhanced Modal styles */
 .preview-modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: var(--css-backdrop-filter, blur(4px));
@@ -233,7 +242,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   background-color: var(--css-background-color);
 }
 
-/* Animation keyframes */
+/* Animation keyframes - with enhanced animations */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -315,7 +324,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   }
 }
 
-/* Animation classes */
+/* Animation classes with enhanced effects */
 .animation-pulse {
   animation: pulse var(--css-animation-duration) infinite alternate ease-in-out;
 }
@@ -351,15 +360,16 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   animation: reveal var(--css-animation-duration) ease-out forwards;
 }
 
-/* Gradient text */
+/* Enhanced gradient text */
 .gradient-text {
   background: var(--css-gradient-background);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: bold;
 }
 
-/* UI helper classes */
+/* UI helper classes with better accessibility */
 .tooltip {
   position: relative;
   display: inline-block;
@@ -379,6 +389,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   white-space: nowrap;
   z-index: 10;
   animation: fade-in 0.2s ease-out;
+  box-shadow: var(--css-shadow);
 }
 
 .interactive-hint {
@@ -404,9 +415,9 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   opacity: 1;
 }
 
-/* Container for all components */
+/* Container for all components with improved styling */
 .css-playground-container {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   max-width: 100%;
   margin: 0 auto;
   color: var(--css-text-color);
@@ -417,12 +428,13 @@ export const generateCSS = (variables: CSSVariable[]): string => {
 }
 
 .header {
-  padding: 1rem;
+  padding: 1.5rem;
   margin-bottom: 1rem;
-  background: var(--css-primary-color);
+  background: var(--css-gradient-background);
   color: white;
   text-align: center;
   border-radius: var(--css-border-radius);
+  box-shadow: var(--css-shadow);
 }
 
 .main-content {
@@ -445,6 +457,7 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   border: var(--css-border);
   border-radius: var(--css-border-radius);
   overflow: auto;
+  box-shadow: var(--css-shadow);
 }
 
 .footer {
@@ -453,6 +466,40 @@ export const generateCSS = (variables: CSSVariable[]): string => {
   text-align: center;
   font-size: 0.875rem;
   border-top: var(--css-border);
+  background-color: rgba(var(--css-background-color), 0.8);
+  backdrop-filter: blur(5px);
+}
+
+/* Theme specific styles */
+.theme-glassmorphism .preview-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.theme-neumorphism .preview-card {
+  background-color: #e0e5ec;
+  box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
+  border: none;
+}
+
+.theme-brutalist .preview-card {
+  background-color: #ffffff;
+  border: 3px solid #000000;
+  box-shadow: 5px 5px 0px #000000;
+  border-radius: 0;
+}
+
+.theme-modern .preview-button {
+  background: var(--css-gradient-background);
+  border: none;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.theme-candy .preview-button {
+  background-color: #ff85a2;
+  border-radius: 999px;
+  box-shadow: 0 5px 15px rgba(255, 133, 162, 0.4);
 }`;
 
   return css;
@@ -466,6 +513,7 @@ export const generateHTML = (): string => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CSS Playground Export</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <style>
     /* CSS will be inserted here from generateCSS() */
     
@@ -475,6 +523,7 @@ export const generateHTML = (): string => {
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
     }
     
     /* Make sure content fills the height */
@@ -524,8 +573,8 @@ export const generateHTML = (): string => {
 <body>
   <div class="css-playground-container animation-fade-in">
     <header class="header">
-      <h1>CSS Playground Export</h1>
-      <p>Custom design created with CSS Playground</p>
+      <h1>Style Sphere Playground</h1>
+      <p>Beautifully crafted UI components with customizable styles</p>
     </header>
     
     <div class="main-content">
@@ -543,7 +592,9 @@ export const generateHTML = (): string => {
       <div class="preview">
         <div class="preview-card" style="height: 100%; overflow-y: auto;">
           <div class="tab-content">
-            <h2>Button Components</h2>
+            <h2 class="gradient-text">Style Components</h2>
+            
+            <h3>Button Components</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
               <button class="preview-button">Button</button>
               <button class="preview-button bg-gradient">Gradient</button>
@@ -551,57 +602,62 @@ export const generateHTML = (): string => {
               <button class="preview-button" disabled style="opacity: 0.6; cursor: not-allowed;">Disabled</button>
             </div>
             
-            <h2>Card Components</h2>
+            <h3>Card Components</h3>
             <div class="preview-card" style="margin: 1rem 0; border: 1px solid var(--css-secondary-color);">
-              <h3>Nested Card</h3>
-              <p>This is a card inside another card component.</p>
+              <h4 style="color: var(--css-secondary-color);">Featured Card</h4>
+              <p>This is a card inside another card component with custom styling.</p>
+              <button class="preview-button interactive" style="margin-top: 1rem; background-color: var(--css-secondary-color);">Learn More</button>
             </div>
             
-            <h2>Form Components</h2>
+            <h3>Form Components</h3>
             <div style="margin: 1rem 0;">
               <div style="margin-bottom: 0.5rem;">
-                <label style="display: block; margin-bottom: 0.25rem;">Text Input</label>
-                <input type="text" class="preview-input" style="width: 100%;" placeholder="Enter text here">
+                <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Full Name</label>
+                <input type="text" class="preview-input" style="width: 100%;" placeholder="Enter your name">
               </div>
               <div style="margin-bottom: 0.5rem;">
-                <label style="display: block; margin-bottom: 0.25rem;">Email Input</label>
-                <input type="email" class="preview-input" style="width: 100%;" placeholder="Enter email here">
+                <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Email Address</label>
+                <input type="email" class="preview-input" style="width: 100%;" placeholder="Enter your email">
               </div>
-              <button class="preview-button" style="margin-top: 1rem;">Submit</button>
+              <div style="margin-bottom: 0.5rem;">
+                <label style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Message</label>
+                <textarea class="preview-input" style="width: 100%; min-height: 100px; resize: vertical;" placeholder="Type your message here"></textarea>
+              </div>
+              <button class="preview-button bg-gradient" style="margin-top: 1rem; width: 100%;">Submit</button>
             </div>
             
-            <h2>Animation Examples</h2>
+            <h3>Animation Examples</h3>
             <div class="animation-showcase">
               <div class="preview-card animation-pulse animation-item">
-                Pulse
+                <span style="font-weight: 500;">Pulse</span>
               </div>
               <div class="preview-card animation-bounce animation-item">
-                Bounce
+                <span style="font-weight: 500;">Bounce</span>
               </div>
               <div class="preview-card animation-float animation-item">
-                Float
+                <span style="font-weight: 500;">Float</span>
               </div>
               <div class="preview-card animation-spin animation-item">
-                Spin
+                <span style="font-weight: 500;">Spin</span>
               </div>
             </div>
             
-            <h2>Modal Example</h2>
+            <h3>Modal Example</h3>
             <button onclick="openModal()" class="preview-button interactive">Open Modal</button>
             
-            <h2>Interactive Elements</h2>
+            <h3>Interactive Elements</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;">
               <div class="tooltip" data-tooltip="This is a tooltip">
                 <button class="preview-button">Hover for tooltip</button>
               </div>
-              <button class="preview-button interactive">Shimmer Effect</button>
+              <button class="preview-button animation-shimmer">Shimmer Effect</button>
             </div>
             
-            <h2>Color Showcase</h2>
+            <h3>Color Showcase</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; margin: 1rem 0;">
-              <div style="background-color: var(--css-primary-color); height: 60px; border-radius: var(--css-border-radius);"></div>
-              <div style="background-color: var(--css-secondary-color); height: 60px; border-radius: var(--css-border-radius);"></div>
-              <div style="background-color: var(--css-accent-color); height: 60px; border-radius: var(--css-border-radius);"></div>
+              <div style="background-color: var(--css-primary-color); height: 60px; border-radius: var(--css-border-radius); display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Primary</div>
+              <div style="background-color: var(--css-secondary-color); height: 60px; border-radius: var(--css-border-radius); display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Secondary</div>
+              <div style="background-color: var(--css-accent-color); height: 60px; border-radius: var(--css-border-radius); display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">Accent</div>
             </div>
           </div>
         </div>
@@ -609,7 +665,7 @@ export const generateHTML = (): string => {
     </div>
     
     <footer class="footer">
-      <p>Created with CSS Playground &copy; 2025</p>
+      <p>Created with Style Sphere Playground &copy; 2025</p>
       <p><small>Variables and styles can be customized in the CSS</small></p>
     </footer>
   </div>
@@ -630,10 +686,11 @@ export const generateHTML = (): string => {
       const modal = document.createElement('div');
       modal.className = 'preview-modal';
       modal.innerHTML = \`
-        <h3>Modal Title</h3>
-        <p>This is a modal dialog created with the exported CSS.</p>
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-          <button class="preview-button" onclick="closeModal()">Close</button>
+        <h3 style="color: var(--css-primary-color); margin-top: 0;">Modal Title</h3>
+        <p>This is a modal dialog created with the exported CSS. It demonstrates how components can be combined to create interactive interfaces.</p>
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem; gap: 0.5rem;">
+          <button class="preview-button" style="background-color: var(--css-accent-color);" onclick="closeModal()">Confirm</button>
+          <button class="preview-button" style="background-color: transparent; border: 1px solid var(--css-primary-color); color: var(--css-primary-color);" onclick="closeModal()">Cancel</button>
         </div>
       \`;
       
@@ -666,7 +723,11 @@ export const generateHTML = (): string => {
             this.classList.add(animations[nextIndex]);
             
             // Update text to match animation
-            this.textContent = animations[nextIndex].replace('animation-', '');
+            const textElement = this.querySelector('span');
+            if (textElement) {
+              textElement.textContent = animations[nextIndex].replace('animation-', '');
+              textElement.textContent = textElement.textContent.charAt(0).toUpperCase() + textElement.textContent.slice(1);
+            }
           }
         });
       });
