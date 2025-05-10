@@ -171,10 +171,10 @@ const CSSPlayground: React.FC = () => {
         
         <ResizablePanelGroup 
           direction="vertical" 
-          className="flex-1 border rounded-xl bg-card shadow-lg overflow-hidden h-full"
+          className="flex-1 border rounded-xl bg-card shadow-lg overflow-hidden h-full horizontal-layout-panel"
         >
           {/* Top Section: Preview Panel */}
-          <ResizablePanel defaultSize={60} minSize={30} className="bg-muted/30">
+          <ResizablePanel defaultSize={60} minSize={30} className="bg-muted/30 overflow-hidden">
             <div className="bg-muted/50 border-b p-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-red-500"></div>
@@ -193,7 +193,7 @@ const CSSPlayground: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <div className="h-full overflow-y-auto p-4">
+            <div className="h-full overflow-y-auto p-4 preview-content">
               <PreviewPanel currentTheme={currentTheme} isDarkMode={isDarkMode} />
             </div>
           </ResizablePanel>
@@ -202,10 +202,10 @@ const CSSPlayground: React.FC = () => {
           <ResizableHandle withHandle />
           
           {/* Bottom Section: CSS Control Panel */}
-          <ResizablePanel defaultSize={40} minSize={25}>
-            <div className="flex h-full">
-              <div className="flex-1 overflow-y-auto p-4">
-                <div className="mb-4 flex items-center justify-between">
+          <ResizablePanel defaultSize={40} minSize={25} className="overflow-hidden">
+            <div className="flex h-full flex-col">
+              <div className="p-4 border-b bg-muted/20">
+                <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium flex items-center gap-2">
                     <Palette size={18} className="text-primary" />
                     CSS Control Panel
@@ -231,7 +231,9 @@ const CSSPlayground: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                
+              </div>
+              
+              <div className="flex-1 overflow-y-auto">
                 <CSSControlPanel 
                   onThemeChange={handleThemeChange}
                   currentTheme={currentTheme}

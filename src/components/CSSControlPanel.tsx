@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
@@ -137,15 +138,8 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
   };
   
   return (
-    <div className="bg-card border rounded-lg shadow-md h-full overflow-y-auto">
-      <div className="p-4 border-b bg-muted/20">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Palette size={18} className="text-primary" />
-          CSS Playground Controls
-        </h2>
-      </div>
-      
-      <Tabs defaultValue="variables" className="p-4">
+    <div className="h-full flex flex-col">
+      <Tabs defaultValue="variables" className="p-4 flex-1 flex flex-col">
         <TabsList className="grid grid-cols-3 mb-4">
           <TabsTrigger value="variables" className="flex items-center gap-1">
             <Palette size={14} /> Variables
@@ -158,205 +152,207 @@ const CSSControlPanel: React.FC<CSSControlPanelProps> = ({
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="variables" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">CSS Variables</h3>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="flex items-center gap-2"
-              onClick={handleAddVariable}
-            >
-              <Plus size={14} /> Add Variable
-            </Button>
-          </div>
-          
-          <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
-            {variables.map((variable, index) => (
-              <div key={variable.name} className="space-y-2 group relative">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor={variable.name}>{variable.label}</Label>
-                  <div className="flex items-center gap-2">
-                    {variable.type === 'color' && (
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-6 h-6 rounded-full border" 
-                          style={{ backgroundColor: variable.value }}
-                        />
-                        <span className="text-xs text-muted-foreground">{variable.value}</span>
-                      </div>
-                    )}
-                    
-                    {variable.type === 'number' && (
-                      <span className="text-xs text-muted-foreground">
-                        {variable.value}{variable.unit}
-                      </span>
-                    )}
-                    
-                    {index >= defaultCssVariables.length && (
-                      <button 
-                        className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => handleRemoveVariable(index)}
-                      >
-                        <Trash size={14} />
-                      </button>
-                    )}
+        <div className="flex-1 overflow-y-auto tab-content-container">
+          <TabsContent value="variables" className="space-y-6 h-full">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium">CSS Variables</h3>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleAddVariable}
+              >
+                <Plus size={14} /> Add Variable
+              </Button>
+            </div>
+            
+            <div className="space-y-4 overflow-y-auto pr-2">
+              {variables.map((variable, index) => (
+                <div key={variable.name} className="space-y-2 group relative">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor={variable.name}>{variable.label}</Label>
+                    <div className="flex items-center gap-2">
+                      {variable.type === 'color' && (
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-6 h-6 rounded-full border" 
+                            style={{ backgroundColor: variable.value }}
+                          />
+                          <span className="text-xs text-muted-foreground">{variable.value}</span>
+                        </div>
+                      )}
+                      
+                      {variable.type === 'number' && (
+                        <span className="text-xs text-muted-foreground">
+                          {variable.value}{variable.unit}
+                        </span>
+                      )}
+                      
+                      {index >= defaultCssVariables.length && (
+                        <button 
+                          className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleRemoveVariable(index)}
+                        >
+                          <Trash size={14} />
+                        </button>
+                      )}
+                    </div>
                   </div>
+                  
+                  {variable.type === 'color' && (
+                    <div className="flex space-x-2">
+                      <Input
+                        type="color"
+                        id={variable.name}
+                        value={variable.value}
+                        onChange={(e) => handleVariableChange(index, e.target.value)}
+                        className="w-12 h-10 p-1"
+                      />
+                      <Input
+                        type="text"
+                        value={variable.value}
+                        onChange={(e) => handleVariableChange(index, e.target.value)}
+                        className="flex-1"
+                        placeholder="#RRGGBB"
+                      />
+                    </div>
+                  )}
+                  
+                  {variable.type === 'number' && (
+                    <div className="flex items-center space-x-2">
+                      <Slider
+                        id={variable.name}
+                        min={variable.min || 0}
+                        max={variable.max || 10}
+                        step={variable.step || 1}
+                        value={[parseFloat(variable.value)]}
+                        onValueChange={(value) => handleVariableChange(index, value[0].toString())}
+                        className="flex-1"
+                      />
+                      <Input
+                        type="number"
+                        min={variable.min}
+                        max={variable.max}
+                        step={variable.step}
+                        value={variable.value}
+                        onChange={(e) => handleVariableChange(index, e.target.value)}
+                        className="w-16"
+                      />
+                    </div>
+                  )}
                 </div>
-                
-                {variable.type === 'color' && (
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="themes" className="space-y-6 h-full">
+            <div>
+              <div className="flex justify-between mb-4">
+                <h3 className="text-lg font-medium">Theme Presets</h3>
+                <Button 
+                  variant={isDarkMode ? "default" : "outline"}
+                  size="sm"
+                  onClick={onToggleDarkMode}
+                  className="flex items-center gap-2"
+                >
+                  {isDarkMode ? "Light Mode" : "Dark Mode"}
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {cssThemes.map((theme) => (
+                  <div
+                    key={theme.name}
+                    className={`border rounded-md p-4 cursor-pointer transition-all hover:shadow-md ${
+                      currentTheme.name === theme.name ? "border-primary ring-2 ring-primary/20" : ""
+                    }`}
+                    onClick={() => onThemeChange(theme)}
+                  >
+                    <h4 className="font-medium">{theme.label}</h4>
+                    <p className="text-sm text-muted-foreground">{theme.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="gradients" className="space-y-6 h-full">
+            <div>
+              <h3 className="text-lg font-medium mb-4">Gradient Controls</h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="gradient-start">Gradient Start Color</Label>
                   <div className="flex space-x-2">
                     <Input
                       type="color"
-                      id={variable.name}
-                      value={variable.value}
-                      onChange={(e) => handleVariableChange(index, e.target.value)}
+                      id="gradient-start"
+                      value={gradientStart}
+                      onChange={(e) => setGradientStart(e.target.value)}
                       className="w-12 h-10 p-1"
                     />
                     <Input
                       type="text"
-                      value={variable.value}
-                      onChange={(e) => handleVariableChange(index, e.target.value)}
+                      value={gradientStart}
+                      onChange={(e) => setGradientStart(e.target.value)}
                       className="flex-1"
                       placeholder="#RRGGBB"
                     />
                   </div>
-                )}
+                </div>
                 
-                {variable.type === 'number' && (
+                <div className="space-y-2">
+                  <Label htmlFor="gradient-end">Gradient End Color</Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      type="color"
+                      id="gradient-end"
+                      value={gradientEnd}
+                      onChange={(e) => setGradientEnd(e.target.value)}
+                      className="w-12 h-10 p-1"
+                    />
+                    <Input
+                      type="text"
+                      value={gradientEnd}
+                      onChange={(e) => setGradientEnd(e.target.value)}
+                      className="flex-1"
+                      placeholder="#RRGGBB"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="gradient-direction">Direction (degrees)</Label>
                   <div className="flex items-center space-x-2">
                     <Slider
-                      id={variable.name}
-                      min={variable.min || 0}
-                      max={variable.max || 10}
-                      step={variable.step || 1}
-                      value={[parseFloat(variable.value)]}
-                      onValueChange={(value) => handleVariableChange(index, value[0].toString())}
+                      id="gradient-direction"
+                      min={0}
+                      max={360}
+                      step={45}
+                      value={[parseInt(gradientDirection)]}
+                      onValueChange={(value) => setGradientDirection(`${value[0]}deg`)}
                       className="flex-1"
                     />
                     <Input
-                      type="number"
-                      min={variable.min}
-                      max={variable.max}
-                      step={variable.step}
-                      value={variable.value}
-                      onChange={(e) => handleVariableChange(index, e.target.value)}
-                      className="w-16"
+                      type="text"
+                      value={gradientDirection}
+                      onChange={(e) => setGradientDirection(e.target.value)}
+                      className="w-20"
                     />
                   </div>
-                )}
+                </div>
+                
+                <div className="h-20 rounded-lg border mt-4" style={{
+                  background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`
+                }}></div>
+                
+                <Button onClick={handleApplyGradient} className="w-full mt-2 flex items-center gap-2">
+                  <GradientIcon size={16} /> Apply Gradient to Elements
+                </Button>
               </div>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="themes" className="space-y-6">
-          <div>
-            <div className="flex justify-between mb-4">
-              <h3 className="text-lg font-medium">Theme Presets</h3>
-              <Button 
-                variant={isDarkMode ? "default" : "outline"}
-                size="sm"
-                onClick={onToggleDarkMode}
-                className="flex items-center gap-2"
-              >
-                {isDarkMode ? "Light Mode" : "Dark Mode"}
-              </Button>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {cssThemes.map((theme) => (
-                <div
-                  key={theme.name}
-                  className={`border rounded-md p-4 cursor-pointer transition-all hover:shadow-md ${
-                    currentTheme.name === theme.name ? "border-primary ring-2 ring-primary/20" : ""
-                  }`}
-                  onClick={() => onThemeChange(theme)}
-                >
-                  <h4 className="font-medium">{theme.label}</h4>
-                  <p className="text-sm text-muted-foreground">{theme.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="gradients" className="space-y-6">
-          <div>
-            <h3 className="text-lg font-medium mb-4">Gradient Controls</h3>
-            
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="gradient-start">Gradient Start Color</Label>
-                <div className="flex space-x-2">
-                  <Input
-                    type="color"
-                    id="gradient-start"
-                    value={gradientStart}
-                    onChange={(e) => setGradientStart(e.target.value)}
-                    className="w-12 h-10 p-1"
-                  />
-                  <Input
-                    type="text"
-                    value={gradientStart}
-                    onChange={(e) => setGradientStart(e.target.value)}
-                    className="flex-1"
-                    placeholder="#RRGGBB"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="gradient-end">Gradient End Color</Label>
-                <div className="flex space-x-2">
-                  <Input
-                    type="color"
-                    id="gradient-end"
-                    value={gradientEnd}
-                    onChange={(e) => setGradientEnd(e.target.value)}
-                    className="w-12 h-10 p-1"
-                  />
-                  <Input
-                    type="text"
-                    value={gradientEnd}
-                    onChange={(e) => setGradientEnd(e.target.value)}
-                    className="flex-1"
-                    placeholder="#RRGGBB"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="gradient-direction">Direction (degrees)</Label>
-                <div className="flex items-center space-x-2">
-                  <Slider
-                    id="gradient-direction"
-                    min={0}
-                    max={360}
-                    step={45}
-                    value={[parseInt(gradientDirection)]}
-                    onValueChange={(value) => setGradientDirection(`${value[0]}deg`)}
-                    className="flex-1"
-                  />
-                  <Input
-                    type="text"
-                    value={gradientDirection}
-                    onChange={(e) => setGradientDirection(e.target.value)}
-                    className="w-20"
-                  />
-                </div>
-              </div>
-              
-              <div className="h-20 rounded-lg border mt-4" style={{
-                background: `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`
-              }}></div>
-              
-              <Button onClick={handleApplyGradient} className="w-full mt-2 flex items-center gap-2">
-                <GradientIcon size={16} /> Apply Gradient to Elements
-              </Button>
-            </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        </div>
       </Tabs>
       
       <div className="p-4 border-t bg-muted/20">
