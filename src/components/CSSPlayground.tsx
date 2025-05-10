@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
@@ -10,7 +11,6 @@ import { cssThemes, CSSTheme } from "@/utils/cssPlaygroundUtils";
 import { 
   Download, 
   Upload, 
-  Github, 
   Moon, 
   Sun, 
   Code,
@@ -90,16 +90,18 @@ const CSSPlayground: React.FC = () => {
                 <Upload size={16} />
                 Import
               </Button>
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-full hover:bg-muted/50"
-                data-tooltip="View source code on GitHub"
+              <Button 
+                variant="outline" 
+                size="sm" 
+                asChild
+                className="text-sm flex items-center gap-2 rounded-full"
+                data-tooltip="Learn more about CSS Playground"
               >
-                <Github size={16} />
-                GitHub
-              </a>
+                <Link to="/about">
+                  <Info size={16} />
+                  About
+                </Link>
+              </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
